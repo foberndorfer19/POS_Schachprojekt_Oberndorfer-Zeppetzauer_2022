@@ -7,5 +7,5 @@ Stundenzuteilung: https://docs.google.com/spreadsheets/d/1h8AL5nzWeatm38jP2hR03a
 
 ------------------------------------------------------------------------------------------------------------------------
 Projektstand 25.01.2022: https://docs.google.com/document/d/1vgXoF78aHaXGoYaLcTvfcZFs-Q3bl03hqxiBjbBO_Tc/edit?usp=sharing
-             18.01.2022: https://docs.google.com/document/d/1ZtWhQM-JTV9TSMlgNihvDjiS64M1u7jHZCExAHoOj5g/edit?usp=sharing
+Projektstand 18.01.2022: https://docs.google.com/document/d/1ZtWhQM-JTV9TSMlgNihvDjiS64M1u7jHZCExAHoOj5g/edit?usp=sharing
 
