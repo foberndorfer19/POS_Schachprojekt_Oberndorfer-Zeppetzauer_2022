@@ -1,153 +1,76 @@
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Board {
-    int board[][] = new int[8][8];
-    
+    private static final Integer BOARD_LENGTH = 8;
+  private final Map<Location, Square> locationSquareMap;
 
-    public Board() {
-        
-        
-        //Place black pieces
-        for(int i = 0;i<8;i++){
-            board[1][i] = 1;
-        }
-        for(int i = 0;i<8;i++){
-            switch(i){
-                case 0:
-                    board[0][i] = 2;
-                    break;
-                case 1:
-                    board[0][i] = 3;
-                    break;
-                case 2:
-                    board[0][i] = 4;
-                    break;
-                case 3:
-                    board[0][i] = 5;
-                    break;
-                case 4:
-                    board[0][i] = 6;
-                    break;
-                case 5:
-                    board[0][i] = 4;
-                    break;
-                case 6:
-                    board[0][i] = 3;
-                    break;
-                case 7:
-                    board[0][i] = 2;
-                    break;
-            }
-        }
-        
-        //Place white pieces
-        for(int i = 0;i<8;i++){
-            board[6][i] = -1;
-        }
-        for(int i = 0;i<8;i++){
-            switch(i){
-                case 0:
-                    board[7][i] = -2;
-                    break;
-                case 1:
-                    board[7][i] = -3;
-                    break;
-                case 2:
-                    board[7][i] = -4;
-                    break;
-                case 3:
-                    board[7][i] = -5;
-                    break;
-                case 4:
-                    board[7][i] = -6;
-                    break;
-                case 5:
-                    board[7][i] = -4;
-                    break;
-                case 6:
-                    board[7][i] = -3;
-                    break;
-                case 7:
-                    board[7][i] = -2;
-                    break;
-            }
-        }
-    }
-    
-    public void placePieces(){
-        for(int i = 0;i<board.length;i++){
-            System.out.print(i+"|");
-            for(int j = 0;j<board[i].length;j++){
-                switch(board[i][j]){
-                    case 0: 
-                        break;
-                    case 1: Piece farmerB = new Farmer(i,j,board[i][j],board);
-                        break;
-                    case 2: Piece towerB = new Tower(i,j,board[i][j],board);
-                        break;
-                    case 3: Piece horseB = new Horse(i,j,board[i][j],board);
-                        break;
-                    case 4: Piece runnerB = new Runner(i,j,board[i][j],board);
-                        break;
-                    case 5: Piece queenB = new Queen(i,j,board[i][j],board);
-                        break;
-                    case 6: Piece kingB = new King(i,j,board[i][j],board);
-                        break;
-                    case -1: Piece farmerA = new Farmer(i,j,board[i][j],board);
-                        break;
-                    case -2: Piece towerA = new Tower(i,j,board[i][j],board);
-                        break;
-                    case -3: Piece horseA = new Horse(i,j,board[i][j],board);
-                        break;
-                    case -4: Piece runnerA = new Runner(i,j,board[i][j],board);
-                        break;
-                    case -5: Piece queenA = new Queen(i,j,board[i][j],board);
-                        break;
-                    case -6: Piece kingA = new King(i,j,board[i][j],board);
-                        break;
-                }
-            }
-        }
-    }
-    
-    public void printBoard(){
-        for(int i = 0;i<board.length;i++){
-            System.out.print(i+"|");
-            for(int j = 0;j<board[i].length;j++){
-                switch(board[i][j]){
-                    case 0: System.out.print("  |");
-                        break;
-                    case 1: System.out.print("♙|");
-                        break;
-                    case 2: System.out.print("♖|");
-                        break;
-                    case 3: System.out.print("♘|");
-                        break;
-                    case 4: System.out.print("♗|");
-                        break;
-                    case 5: System.out.print("♕|");
-                        break;
-                    case 6: System.out.print("♔|");
-                        break;
-                    case -1: System.out.print("♟|");
-                        break;
-                    case -2: System.out.print("♜|");
-                        break;
-                    case -3: System.out.print("♞|");
-                        break;
-                    case -4: System.out.print("♝|");
-                        break;
-                    case -5: System.out.print("♛|");
-                        break;
-                    case -6: System.out.print("♚|");
-                        break;
-                }
-            }
-            System.out.println("");
-            System.out.println("------------------------");
-        }
-        System.out.println("1|2|3|4|5|6|7|8");
-    }
+  Square[][] boardSquares = new Square[BOARD_LENGTH][BOARD_LENGTH];
 
-    public int[][] getBoard() {
-        return board;
+  private final List<AbstractPiece> lightPieces = new ArrayList<>();
+  private final List<AbstractPiece> darkPieces = new ArrayList<>();
+
+  public Board() {
+    locationSquareMap = new HashMap<>();
+    Map<Location, AbstractPiece> pieces = PieceFactory.getPieces();
+    for(int i = 0; i < boardSquares.length; i++) {
+      int column = 0;
+      SquareColor currentColor = (i % 2 == 0) ? SquareColor.LIGHT : SquareColor.DARK;
+      for(File file : File.values()) {
+        Square newSquare = new Square(currentColor, new Location(file,  BOARD_LENGTH - i));
+        if (pieces.containsKey(newSquare.getLocation())) {
+          AbstractPiece piece = pieces.get(newSquare.getLocation());
+          newSquare.setCurrentPiece(piece);
+          newSquare.setOccupied(true);
+          piece.setCurrentSquare(newSquare);
+          if (piece.getPieceColor().equals(PieceColor.DARK)) {
+            darkPieces.add(piece);
+          } else {
+            lightPieces.add(piece);
+          }
+        }
+        boardSquares[i][column] = newSquare;
+        locationSquareMap.put(newSquare.getLocation(), newSquare);
+        currentColor = (currentColor == SquareColor.DARK) ? SquareColor.LIGHT : SquareColor.DARK;
+        column++;
+      }
     }
+  }
+
+  public Map<Location, Square> getLocationSquareMap() {
+    return locationSquareMap;
+  }
+
+  public List<AbstractPiece> getLightPieces() {
+    return lightPieces;
+  }
+
+  public List<AbstractPiece> getDarkPieces() {
+    return darkPieces;
+  }
+
+  public void printBoard() {
+    for(int i = 0; i < boardSquares.length; i++) {
+      System.out.print(BOARD_LENGTH - i + " ");
+      for(int j = 0; j < boardSquares[i].length; j++) {
+        if (boardSquares[i][j].isOccupied()) {
+          AbstractPiece piece = boardSquares[i][j].getCurrentPiece();
+          System.out.print(piece.getName().charAt(0) + " ");
+        } else {
+          // empty square
+          System.out.print("- ");
+        }
+      }
+      System.out.println();
+    }
+    System.out.print("  ");
+    for(File file : File.values()) {
+      System.out.print(file.name() + " ");
+    }
+    System.out.println();
+  }
+
 }
