@@ -1,63 +1,32 @@
+public class Bishop extends AbstractPiece {
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+	public Bishop(boolean isWhite) {
+		super(isWhite);
+	}
 
-public class Bishop extends AbstractPiece implements Movable {
-  public Bishop(PieceColor pieceColor) {
-    super(pieceColor);
-    this.name = "Bishop";
-  }
+	@Override
+	public void draw() {
+		if (isWhite) {
+			System.out.print("\u2657");
+		} else {
+			System.out.print("\u265D");
+		}
+	}
 
-  @Override
-  public List<Location> getValidMoves(Board board) {
-    List<Location> moveCandidates = new ArrayList<>();
-    Map<Location, Square> squareMap = board.getLocationSquareMap();
-    Location current = this.getCurrentSquare().getLocation();
-    getMoves(moveCandidates, squareMap, current, 1, 1);
-    getMoves(moveCandidates, squareMap, current, 1, -1);
-    getMoves(moveCandidates, squareMap, current, -1, -1);
-    getMoves(moveCandidates, squareMap, current, -1, 1);
-    return moveCandidates;
-  }
+	private static Boolean diagonalPath(int srcRow, int srcCol,
+			int destRow, int destCol) {
+		return ((Math.abs(srcRow - destRow) == Math.abs(srcCol
+				- destCol)));
+	}
 
-  private void getMoves(
-      List<Location> candidates,
-      Map<Location, Square> squareMap,
-      Location current,
-      int rankOffset,
-      int fileOffset) {
-    try {
-      Location next = LocationFactory.build(current, fileOffset, rankOffset);
-      while (squareMap.containsKey(next)) {
-        if (squareMap.get(next).isOccupied()) {
-          if (squareMap.get(next).getCurrentPiece().pieceColor.equals(this.pieceColor)) break;
-          candidates.add(next);
-          break;
-        }
-        candidates.add(next);
-        next = LocationFactory.build(next, fileOffset, rankOffset);
-      }
-    } catch (Exception e) { }
-  }
+	@Override
+	public boolean isMoveValid(int srcRow, int srcCol, int destRow, int destCol) {
+		return diagonalPath(srcRow, srcCol, destRow, destCol);
+	}
 
-  @Override
-  public List<Location> getValidMoves(Board board, Square square) {
-    List<Location> moveCandidates = new ArrayList<>();
-    Map<Location, Square> squareMap = board.getLocationSquareMap();
-    Location current = square.getLocation();
-    getMoves(moveCandidates, squareMap, current, 1, 1);
-    getMoves(moveCandidates, squareMap, current, 1, -1);
-    getMoves(moveCandidates, squareMap, current, -1, -1);
-    getMoves(moveCandidates, squareMap, current, -1, 1);
-    return moveCandidates;
-  }
+	@Override
+	public int relativeValue() {
+		return 3;
+	}
 
-  @Override
-  public void makeMove(Square square) {
-    this.currentSquare.setOccupied(false);
-    this.setCurrentSquare(square);
-    square.setCurrentPiece(this);
-    square.setOccupied(true);
-  }
 }

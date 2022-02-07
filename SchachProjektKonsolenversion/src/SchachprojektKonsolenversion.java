@@ -1,32 +1,61 @@
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Scanner;
 
 
 public class SchachprojektKonsolenversion {
 
+    static Scanner user_input = new Scanner(System.in);
+
+	
     public static void main(String[] args) {
-        Board board = new Board();
-    board.printBoard();
+	Chessboard chessboard = new Chessboard();
+        String input;
 
-    Scanner scanner = new Scanner(System.in);
-    // true -> game is not finished.
-    while(true) {
-      // E2,E4
-
-      String line = scanner.nextLine();
-      String[] fromTo = line.split(",");
-      File fromFile = File.valueOf(String.valueOf(Character.toUpperCase(fromTo[0].charAt(0))));
-      int fromRank = Integer.parseInt(String.valueOf(fromTo[0].charAt(1)));
-      File toFile = File.valueOf(String.valueOf(Character.toUpperCase(fromTo[1].charAt(0))));
-      int toRank = Integer.parseInt(String.valueOf(fromTo[1].charAt(1)));
-
-      Square fromSq = board.getLocationSquareMap().get(new Location(fromFile, fromRank));
-      Square toSq = board.getLocationSquareMap().get(new Location(toFile, toRank));
-
-      fromSq.getCurrentPiece().makeMove(toSq);
-      fromSq.reset();
-
-      board.printBoard();
+        
+        
+	while (chessboard.getGameRunning()) {
+            chessboard.printBoard();
+            chessboard.move();
+            
+            /*
+            try {
+                ServerSocket ss = new ServerSocket(4800);
+                Socket s = ss.accept();
+                InputStreamReader isr = new InputStreamReader(s.getInputStream());
+                BufferedReader br = new BufferedReader(isr);
+                OutputStreamWriter osw = new OutputStreamWriter(s.getOutputStream());
+                BufferedWriter bw = new BufferedWriter(osw);
+                
+                
+                if(chessboard.getWhitesTurnToMove()){
+                    chessboard.printBoard();
+                    chessboard.move();
+                }
+                else{
+                    bw.write("Inputrequest");
+                    
+                    for(input = br.readLine(); input == null; input = br.readLine()) {
+                        if(input != null){
+                            chessboard.setMove(input);
+                        }
+                    }
+                    chessboard.printBoard();
+                    chessboard.move();
+                }
+                br.close();
+                isr.close();
+                s.close();
+                ss.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            */
+	}
     }
-  }
 }

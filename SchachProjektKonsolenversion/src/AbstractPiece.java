@@ -1,33 +1,18 @@
-public abstract class AbstractPiece implements Movable {
-  protected String name;
-  protected PieceColor pieceColor;
-  protected Square currentSquare;
+public abstract class AbstractPiece {
+    boolean isWhite;
 
-  public AbstractPiece(PieceColor pieceColor) {
-    this.pieceColor = pieceColor;
-  }
+	public AbstractPiece(boolean isWhite) {
+		this.isWhite = isWhite;
+	}
 
-  public String getName() {
-    return name;
-  }
+	public boolean isWhite() {
+		return isWhite;
+	}
 
-  public PieceColor getPieceColor() {
-    return pieceColor;
-  }
+	public abstract void draw();
 
-  public Square getCurrentSquare() {
-    return currentSquare;
-  }
+	public abstract boolean isMoveValid(int srcRow, int srcCol, int destRow,
+			int destCol);
 
-  public void setCurrentSquare(Square currentSquare) {
-    this.currentSquare = currentSquare;
-  }
-
-  @Override
-  public String toString() {
-    return "AbstractPiece{" +
-        "name='" + name + '\'' +
-        ", pieceColor=" + pieceColor +
-        '}';
-  }
+	public abstract int relativeValue();
 }

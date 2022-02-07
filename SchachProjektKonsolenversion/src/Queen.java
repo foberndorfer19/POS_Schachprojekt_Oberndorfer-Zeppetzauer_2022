@@ -1,42 +1,39 @@
+public class Queen extends AbstractPiece {
 
-import java.util.ArrayList;
-import java.util.List;
+	public Queen(boolean isWhite) {
+		super(isWhite);
+		
+		}
 
-public class Queen extends AbstractPiece implements Movable {
+	@Override
+	public void draw() {
+		if (isWhite){
+			System.out.print("\u2655");
+		}
+		else{
+			System.out.print("\u265B");
+		}
+	}
 
-  private Movable bishop;
-  private Movable rook;
+	private static Boolean diagonalPath(int srcRow, int srcCol, int destRow,
+			int destCol) {
+		return ((Math.abs(srcRow - destRow) == Math.abs(srcCol - destCol)));
+	}
 
+	private static Boolean straightPath(int srcRow, int srcCol, int destRow,
+			int destCol) {
+		return !((srcRow != destRow) && (srcCol != destCol));
+	}
 
-  public Queen(PieceColor pieceColor) {
-    this(pieceColor, new Bishop(pieceColor), new Rook(pieceColor));
-  }
+	@Override
+	public boolean isMoveValid(int srcRow, int srcCol, int destRow, int destCol) {
+		return (diagonalPath(srcRow, srcCol, destRow, destCol))
+				|| straightPath(srcRow, srcCol, destRow, destCol);
+	}
 
-  public Queen(PieceColor pieceColor, Movable bishop, Movable rook) {
-    super(pieceColor);
-    this.name = "Queen";
-    this.bishop = bishop;
-    this.rook = rook;
-  }
+	@Override
+	public int relativeValue() {
+		return 9;
+	}
 
-  @Override
-  public List<Location> getValidMoves(Board board) {
-    List<Location> moveCandidates = new ArrayList<>();
-    moveCandidates.addAll(bishop.getValidMoves(board, this.getCurrentSquare()));
-    moveCandidates.addAll(rook.getValidMoves(board, this.getCurrentSquare()));
-    return moveCandidates;
-  }
-
-  @Override
-  public List<Location> getValidMoves(Board board, Square square) {
-    return null;
-  }
-
-  @Override
-  public void makeMove(Square square) {
-    this.currentSquare.setOccupied(false);
-    this.setCurrentSquare(square);
-    square.setCurrentPiece(this);
-    square.setOccupied(true);
-  }
 }
