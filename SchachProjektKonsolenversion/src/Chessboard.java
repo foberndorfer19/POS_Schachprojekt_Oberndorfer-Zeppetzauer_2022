@@ -10,6 +10,8 @@ public class Chessboard {
 	private static int whiteScore = 0, blackScore = 0;
 	private static Boolean whitesTurnToMove;
 	private static Boolean invalidMove = false;
+        private static Boolean blackWin = false;
+        private static Boolean whiteWin = false;
 	String move;
 
     public void setMove(String move) {
@@ -173,15 +175,22 @@ public class Chessboard {
 			return;
 		}
 		if (whitesTurnToMove) {
-			whiteScore += chessboard[destRow][destCol].relativeValue();
+                    if(chessboard[destRow][destCol].relativeValue() == 10){
+                        whiteWin = true;
+                    }else{
+                        whiteScore += chessboard[destRow][destCol].relativeValue();
+                    }
 		} else {
-			blackScore += chessboard[destRow][destCol].relativeValue();
-
+                    if(chessboard[destRow][destCol].relativeValue() == 10){
+                        blackWin = true;
+                    }else{
+                        blackScore += chessboard[destRow][destCol].relativeValue();
+                    }
 		}
 	}
 
 	public void move() {
-
+            if(!whiteWin && !blackWin){
 		System.out.println("___________________________________________________\n"
 						+ "Score: White "
 						+ whiteScore
@@ -242,6 +251,13 @@ public class Chessboard {
                 System.err.println("Input is invalid. Please try again:");
                 move();
             }
+          }else if(whiteWin){
+                System.out.println("Congratulations! White has won the game.");
+                gameRunning = false;
+          }else{
+              System.out.println("Congratulations! Black has won the game.");
+              gameRunning = false;
+          }
 	}
 
 }
